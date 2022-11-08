@@ -42,7 +42,7 @@ public enum MergeStep {
 		@Override
 		protected void run(Matcher matcher, ClassEnvironment env, DoubleConsumer progress) {
 			List<ClassInstance> classes = env.getClassesA().stream()
-					.filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch() && !cls.isFullyMatched(false))
+					.filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch() && !cls.isFullyMatched(false))
 					.collect(Collectors.toList());
 			Queue<ClassInstance> mismatches = new ConcurrentLinkedQueue<>();
 
@@ -71,7 +71,7 @@ public enum MergeStep {
 		@Override
 		protected void run(Matcher matcher, ClassEnvironment env, DoubleConsumer progress) {
 			List<ClassInstance> classes = env.getClassesA().stream()
-					.filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch() /*&& cls.isFullyMatched(false)*/)
+					.filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch() /*&& cls.isFullyMatched(false)*/)
 					.collect(Collectors.toList());
 			Map<ClassInstance, ClassInstance> matches = new ConcurrentHashMap<>(classes.size());
 			Map<MethodInstance, MethodInstance> methodMatches = new ConcurrentHashMap<>(classes.size());
@@ -275,7 +275,7 @@ public enum MergeStep {
 		@Override
 		protected void run(Matcher matcher, ClassEnvironment env, DoubleConsumer progress) {
 			List<ClassInstance> classes = env.getClassesA().stream()
-					.filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch())
+					.filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch())
 					.collect(Collectors.toList());
 			Queue<MethodInstance> mismatches = new ConcurrentLinkedQueue<>();
 
@@ -312,7 +312,7 @@ public enum MergeStep {
 		@Override
 		protected void run(Matcher matcher, ClassEnvironment env, DoubleConsumer progress) {
 			List<ClassInstance> classes = env.getClassesA().stream()
-					.filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch() && !cls.isFullyMatched(false) && cls.getMethods().length > 0)
+					.filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch() && !cls.isFullyMatched(false) && cls.getMethods().length > 0)
 					.collect(Collectors.toList());
 			Map<ClassInstance, ClassInstance> typeMatches = new ConcurrentHashMap<>();
 			Map<MethodInstance, MethodInstance> matches = new ConcurrentHashMap<>();
@@ -443,7 +443,7 @@ public enum MergeStep {
 		@Override
 		protected void run(Matcher matcher, ClassEnvironment env, DoubleConsumer progress) {
 			List<ClassInstance> classes = env.getClassesA().stream()
-					.filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch() && cls.getMethods().length > 0)
+					.filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch() && cls.getMethods().length > 0)
 					.collect(Collectors.toList());
 			Map<ClassInstance, ClassInstance> matches = new ConcurrentHashMap<>();
 

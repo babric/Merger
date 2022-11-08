@@ -55,36 +55,36 @@ public class MergingMenu extends Menu {
 			int progressDivison = steps.size();
 
 			for (MergeStep step : steps) {
-				long previousUnmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long previousUnmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
 
 				step.run(gui, value -> progress.accept(value / progressDivison));
 
-				long unmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long unmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
 				System.out.println("Matched " + Math.abs(previousUnmatched - unmatched) + " classes (" + unmatched + " left unmatched, " + gui.getEnv().getClassesA().size() + " total)");
 			}
 		}
 
 		void keepRunning(DoubleConsumer progress) {
 			for (MergeStep step : MergeStep.values()) {
-				long previousUnmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long previousUnmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
 
 				step.run(gui, progress::accept);
 
-				long unmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long unmatched = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
 				System.out.println("Matched " + Math.abs(previousUnmatched - unmatched) + " classes (" + unmatched + " left unmatched, " + gui.getEnv().getClassesA().size() + " total)");
 			}
 
 			long matched = 0;
 			do {
-				long previousUnmatchedClasses = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
-				long previousUnmatchedMethods = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getMethods())).filter(method -> !method.hasMatch()).count();
-				long previousUnmatchedFields = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getFields())).filter(method -> !method.hasMatch()).count();
+				long previousUnmatchedClasses = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long previousUnmatchedMethods = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getMethods())).filter(method -> !method.hasMatch()).count();
+				long previousUnmatchedFields = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getFields())).filter(method -> !method.hasMatch()).count();
 
 				MergeStep.UsageMatch.run(gui, progress::accept);
 
-				long unmatchedClasses = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
-				long unmatchedMethods = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getMethods())).filter(method -> !method.hasMatch()).count();
-				long unmatchedFields = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getFields())).filter(method -> !method.hasMatch()).count();
+				long unmatchedClasses = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && !cls.hasMatch()).count();
+				long unmatchedMethods = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getMethods())).filter(method -> !method.hasMatch()).count();
+				long unmatchedFields = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch()).flatMap(cls -> Arrays.stream(cls.getFields())).filter(method -> !method.hasMatch()).count();
 
 				matched = Math.abs(previousUnmatchedClasses - unmatchedClasses) + Math.abs(previousUnmatchedMethods - unmatchedMethods) + Math.abs(previousUnmatchedFields - unmatchedFields);
 				System.out.println("Matched " + (unmatchedClasses - previousUnmatchedClasses) + " classes (" + unmatchedClasses + " left unmatched, " + gui.getEnv().getClassesA().size() + " total)");
@@ -94,7 +94,7 @@ public class MergingMenu extends Menu {
 		}
 
 		private boolean assertMatches() {
-			List<ClassInstance> classes = gui.getEnv().getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated() && cls.hasMatch() && cls.getMethods().length > 0).collect(Collectors.toList());
+			List<ClassInstance> classes = gui.getEnv().getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated() && cls.hasMatch() && cls.getMethods().length > 0).collect(Collectors.toList());
 			Set<MethodInstance> mismatches = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
 			Matcher.runInParallel(classes, cls -> {

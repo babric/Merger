@@ -265,7 +265,7 @@ public class TripleClassEnvironment extends ClassEnvironment {
 
 	@Override
 	public List<ClassInstance> getDisplayClassesA(boolean inputsOnly) {
-		return extractorC.getClasses().stream().filter(cls -> cls.getUri() != null && (!inputsOnly || cls.isInput())).sorted(Comparator.comparing(ClassInstance::toString)).collect(Collectors.toList());
+		return extractorC.getClasses().stream().filter(cls -> cls.getOrigin() != null && (!inputsOnly || cls.isInput())).sorted(Comparator.comparing(ClassInstance::toString)).collect(Collectors.toList());
 	}
 
 	@Override

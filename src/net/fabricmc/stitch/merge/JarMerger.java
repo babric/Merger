@@ -108,7 +108,7 @@ public class JarMerger implements AutoCloseable {
 			String name = path.toString().substring(1, path.toString().length() - 6);
 			ClassInstance cls = classFactory.apply(name);
 
-			assert cls != null && cls.getUri() != null: "Unable to find valid class for " + name + " (produced " + cls + ')';
+			assert cls != null && cls.getOrigin() != null: "Unable to find valid class for " + name + " (produced " + cls + ')';
 			AsmRemapper remapper = new MappedUidRemapper(cls.getEnv());
 
 			String replacementPath = remapper.map(cls.getName()) + ".class";;

@@ -476,7 +476,7 @@ public class MergedJaringMenu extends Menu {
 				env.init(Collections.singletonList(export.getArgoJar()), Collections.emptyList(), Config.getProjectConfig(), progress);
 
 				QueuingIterator<MergeStep> task = new QueuingIterator<>(MergeStep.values(), MergeStep.UsageMatch);
-				Set<ClassInstance> classesToDo = env.getClassesA().stream().filter(cls -> cls.getUri() != null && cls.isNameObfuscated()).collect(Collectors.toCollection(Util::newIdentityHashSet));
+				Set<ClassInstance> classesToDo = env.getClassesA().stream().filter(cls -> cls.getOrigin() != null && cls.isNameObfuscated()).collect(Collectors.toCollection(Util::newIdentityHashSet));
 
 				long matched = 0;
 				do {
@@ -526,7 +526,7 @@ public class MergedJaringMenu extends Menu {
 
 						for (ClassInstance cls : env.getClassesA()) {
 							progress.accept(done++ / toDo);
-							if (cls.getUri() == null || !cls.hasMatch()) continue;
+							if (cls.getOrigin() == null || !cls.hasMatch()) continue;
 
 							ClassInstance match = cls.getMatch();
 
@@ -558,7 +558,7 @@ public class MergedJaringMenu extends Menu {
 
 						//Could unmatch things as we go, but this avoids any accidents later if the nature of Matcher#unmatch changes
 						for (ClassInstance cls : env.getClassesA()) {
-							if (cls.getUri() != null && cls.hasMatch()) {
+							if (cls.getOrigin() != null && cls.hasMatch()) {
 								thirdWay.unmatch(cls); //Clean up once things are mapped otherwise things will trip up later
 								assert !cls.hasMatch();
 							}
@@ -694,7 +694,7 @@ public class MergedJaringMenu extends Menu {
 	private static List<ClassSystem> findSystems(Stream<ClassInstance> classes, Predicate<ClassInstance> isAside, DoubleConsumer progress) {
 		List<ClassSystem> systems = new ArrayList<>();
 
-		Matcher.runInParallel(classes.filter(cls -> cls.getUri() != null && cls.isInput() && cls.isNameObfuscated()).collect(Collectors.toList()), cls -> {
+		Matcher.runInParallel(classes.filter(cls -> cls.getOrigin() != null && cls.isInput() && cls.isNameObfuscated()).collect(Collectors.toList()), cls -> {
 			if ((cls.getAccess() & Opcodes.ACC_SYNTHETIC) != 0) return; //Synthetic enum switch class
 
 			boolean isNotable = false;
