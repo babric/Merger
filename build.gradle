@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name "Fabric"
+        url 'https://maven.fabricmc.net/'
+    }
+}
+
+archivesBaseName = 'merger'
+group = 'com.chocohead'
+
+sourceSets {
+    main {
+        java.srcDirs = ['src']
+        resources.srcDirs = ['resources']
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(11)
+        }
+    }
+}
+
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls', 'javafx.web' ]
+}
+
+dependencies {
+    implementation "net.fabricmc:matcher:0.1.0"
+}
